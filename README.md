@@ -102,6 +102,16 @@ Aquí están **todos los endpoints creados** y su respectiva funcionalidad. 🎯
 | **POST** | `/chat` | 💬 **Realiza consultas a GPT-4.1** y recibe respuestas basadas en Retrieval-Augmented Generation (RAG). |
 | **POST** | `/webhook` | 📥 **Recibe mensajes entrantes de WhatsApp** y los procesa en FastAPI. |
 
+## Mejoras en producción
+
+- Se migro el modelo de un GPT-4o (128k tokens) a un GPT 4.1 (1M tokens).
+- Se implemento un workflow para enviaqr los cambios del pdf por correo para luego ser ingestados en Bronze.
+
+## Proximas mejoras
+
+- Incorppración de memoria para persistencia de mensajes por usuario.
+- Implementar un DAG para RAG pipeline para automatizar el workflow de datos.
+
 
 
 
