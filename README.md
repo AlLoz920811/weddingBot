@@ -8,6 +8,8 @@ Este script implementa un **flujo extremo-a-extremo** que transforma un PDF aloj
 
 **Pasos del flujo**
 
+![Diagrama RAG](images/rag_pipeline.png "Flujo completo del pipeline RAG")
+
 - 🟠 **Ingesta:** El PDF se almacena en **Blob Storage – Bronze**.
 
 - 📖**OCR:** prebuilt-read de **Azure Document Intelligence** extrae el texto.
