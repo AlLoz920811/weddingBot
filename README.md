@@ -1,4 +1,4 @@
-## Sofía – Asistente Conversacional para la Boda
+## Sofía – Asistente Conversacional para Bodas
 
 *Sofía* es un asistente conversacional para **WhatsApp**, creado específicamente para preguntas y respuestas para bodas.
 
@@ -16,6 +16,44 @@
   - Maneja ≈ **1 M tokens**, permitiendo seguimiento de conversaciones largas sin perder datos importantes de cada invitado.
 
 ![Sofia](images/sofia.jpeg "Imagen de Sofia")
+
+---
+
+![Conversacion1](images/1.jpeg "Conversacion1")
+
+---
+
+![Conversacion2](images/2.jpeg "Conversacion2")
+
+---
+
+![Conversacion3](images/3.jpeg "Conversacion3")
+
+---
+
+![Conversacion4](images/4.jpeg "Conversacion4")
+
+---
+
+
+![Conversacion5](images/5.jpeg "Conversacion5")
+
+---
+
+
+![Conversacion6](images/6.jpeg "Conversacion6")
+
+---
+
+
+![Conversacion7](images/7.jpeg "Conversacion7")
+
+---
+
+
+![Conversacion8](images/8.jpeg "Conversacion8")
+
+---
 
 ## 🚀 RAG Pipeline «Wedding Info» — Visión General
 
