@@ -17,6 +17,7 @@ flowchart TD
   end
   F -->|Consulta híbrida| G["Azure OpenAI GPT-4o\n(Asistente Sofía)"]
 
+---
 
 # 📌 **Lista de Endpoints Creados en la API FastAPI Desplegada en Azure**  
 
