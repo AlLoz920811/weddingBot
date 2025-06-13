@@ -111,6 +111,7 @@ Aquí están **todos los endpoints creados** y su respectiva funcionalidad. 🎯
 
 - Incorppración de memoria para persistencia de mensajes por usuario.
 - Implementar un DAG para RAG pipeline para automatizar el workflow de datos.
+- Para mejorar la experiencia de usuario se puede crear un avatar digital en la app o voz en Real Time por twilio para llamadas continuas.
 
 
 
