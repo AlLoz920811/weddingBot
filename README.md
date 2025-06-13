@@ -8,14 +8,14 @@ Este script implementa un **flujo extremo-a-extremo** que transforma un PDF aloj
 
 ```mermaid
 flowchart TD
-    subgraph Azure
-        A[Blob Storage<br/>Bronze] -->|PDF| B[Azure Document Intelligence<br/>(prebuilt-read)]
-        B -->|texto| C[Blob Storage<br/>Silver]
-        C -->|normalizado| D[Blob Storage<br/>Gold]
-        D -->|JSON segmentado| E[Azure OpenAI<br/>Embeddings]
-        E -->|vector + metadatos| F[Azure AI Search Index]
-    end
-    F -->|Consulta híbrida| G[Azure OpenAI GPT-4o<br/>Respuesta chat]
+  subgraph Azure
+    A["Blob Storage – Bronze\n(PDF)"] -->|PDF| B["Azure Document Intelligence\n(prebuilt-read)"]
+    B -->|texto| C["Blob Storage – Silver\n(Texto limpio)"]
+    C -->|normalizado| D["Blob Storage – Gold\n(JSON segmentado)"]
+    D -->|JSON| E["Azure OpenAI\n(Embeddings)"]
+    E -->|vectores| F["Azure AI Search\n(Index)"]
+  end
+  F -->|Consulta híbrida| G["Azure OpenAI GPT-4o\n(Asistente Sofía)"]
 
 
 # 📌 **Lista de Endpoints Creados en la API FastAPI Desplegada en Azure**  
