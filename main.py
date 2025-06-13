@@ -5,7 +5,7 @@ import uuid
 import os
 from openai import AzureOpenAI
 from RAG import search_query
-###
+
 
 app = FastAPI(title="WeddingBot Sofia", description="IA de Q&A para bodas")
 
