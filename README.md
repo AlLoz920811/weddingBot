@@ -1,3 +1,22 @@
+## Sofía – Asistente Conversacional para la Boda
+
+*Sofía* es un asistente conversacional para **WhatsApp**, creado específicamente para preguntas y respuestas para bodas.
+
+- **Backend RAG en Azure**  
+  - **GPT-4.1**  
+  - Búsqueda híbrida **BM25 + embeddings**  
+  - Responde con información verificada (agenda, vestimenta, traslados, menús).
+
+- **Integración con Twilio**  
+  - Envía y recibe mensajes.  
+  - Transcribe audios con **ElevenLabs**.  
+  - Limita sus respuestas a ≈ **1600 caracteres** para mayor claridad y rapidez.
+
+- **Memoria contextual**  
+  - Maneja ≈ **1 M tokens**, permitiendo seguimiento de conversaciones largas sin perder datos importantes de cada invitado.
+
+![Sofia](images/sofia.jpeg "Imagen de Sofia")
+
 ## 🚀 RAG Pipeline «Wedding Info» — Visión General
 
 Este script implementa un **flujo extremo-a-extremo** que transforma un PDF alojado en Azure Blob Storage en documentos indexados con vectores para un asistente conversacional (Sofía) sobre Azure AI Search + Azure OpenAI.
