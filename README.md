@@ -105,7 +105,7 @@ Aquí están **todos los endpoints creados** y su respectiva funcionalidad. 🎯
 ## Mejoras en producción
 
 - Se migro el modelo de un GPT-4o (128k tokens) a un GPT 4.1 (1M tokens).
-- Se implemento un workflow para enviaqr los cambios del pdf por correo para luego ser ingestados en Bronze.
+- Se implemento un workflow para enviar los cambios del pdf por correo para luego ser ingestados en Bronze.
 
 ## Proximas mejoras
 
