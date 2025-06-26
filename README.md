@@ -15,8 +15,6 @@
 - **Memoria contextual**  
   - Maneja ≈ **1 M tokens**, permitiendo seguimiento de conversaciones largas sin perder datos importantes de cada invitado.
 
-![Sofia](images/sofia.jpeg "Imagen de Sofia")
-
 ---
 
 ![Conversacion1](images/1.jpeg "Conversacion1")
