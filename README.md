@@ -9,7 +9,6 @@
 
 - **Integración con Twilio**  
   - Envía y recibe mensajes.  
-  - Transcribe audios con **ElevenLabs**.  
   - Limita sus respuestas a ≈ **1600 caracteres** para mayor claridad y rapidez.
 
 - **Memoria contextual**  
