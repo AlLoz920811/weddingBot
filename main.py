@@ -9,12 +9,12 @@ from openai import AzureOpenAI
 from RAG import search_query
 from twilio.twiml.messaging_response import MessagingResponse
 
-app = FastAPI(title="WeddingBot Sofia", description="IA de Q&A para bodas")
+app = FastAPI(title="WeddingBot Sofia", description="Wedding Q&A AI Assistant")
 
-# Cargar variables desde el archivo .env
+# Load environment variables from .env file
 load_dotenv()
 
-# Configuración de Azure OpenAI Y AI Search
+# Azure OpenAI and AI Search configuration
 AZURE_SEARCH_ENDPOINT = os.getenv("AZURE_SEARCH_ENDPOINT")
 AZURE_SEARCH_KEY = os.getenv("AZURE_SEARCH_KEY")
 AZURE_INDEX_NAME = os.getenv("AZURE_INDEX_NAME")
@@ -22,7 +22,7 @@ AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
 AZURE_OPENAI_KEY = os.getenv("AZURE_OPENAI_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Configuración de Azure Search
+# Azure Search configuration
 search_service_endpoint = AZURE_SEARCH_ENDPOINT
 index_name = AZURE_INDEX_NAME
 search_api_key = AZURE_SEARCH_KEY 
@@ -32,7 +32,7 @@ class QueryRequest(BaseModel):
     session_id: str = None
     query: str
 
-#creating an Azure OpenAI client
+# Creating an Azure OpenAI client
 client = AzureOpenAI(
     api_key = AZURE_OPENAI_KEY,  
     api_version = "2024-02-15-preview",
@@ -42,21 +42,20 @@ openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 @app.get("/")
 def home():
-    return f"Bienvenido a {app.title}🚀"
+    return f"Welcome to {app.title}🚀"
 
 @app.post("/chat")
 def chat(request: QueryRequest):
     """
-    Recibe una pregunta y devuelve una respuesta basada en RAG.
-    Si no se proporciona session_id, genera uno automáticamente.
+    Receives a question and returns a RAG-based response.
+    If no session_id is provided, one is automatically generated.
     """
-    # Generar session_id si no se proporciona
+    # Generate session_id if not provided
     session_id = request.session_id if request.session_id else str(uuid.uuid4())
     query = request.query
 
     try:
-
-        # Configuración de Azure Search
+        # Azure Search configuration
         search_service_endpoint = AZURE_SEARCH_ENDPOINT
         index_name = AZURE_INDEX_NAME
         search_api_key = AZURE_SEARCH_KEY 
@@ -64,52 +63,46 @@ def chat(request: QueryRequest):
 
         context = search_query(client, query, search_api_key, search_service_endpoint, index_name, api_search_version)
         
-        # Generar respuesta con GPT-4o
-        system_prompt = f''' Eres **Sofía**, la organizadora profesional de eventos encargada de asistir a los invitados de la 
-                             boda de Laura Guadalupe Zarazúa Arvizu y José Alberto Lozano Sánchez. 
-                             Atiendes por WhatsApp usando RAG con búsqueda semántica híbrida (Top‑10).
+        # Generate response with GPT-4.1
+        system_prompt = f'''You are **Sofia**, the professional event organizer in charge of assisting the guests of 
+                         the wedding of Laura Guadalupe Zarazúa Arvizu and José Alberto Lozano Sánchez. 
+                         You attend via WhatsApp using RAG with hybrid semantic search (Top-10).
 
-                            🎯 **Fuente única**  
-                            Solo extrae información de los **10 fragmentos** en `{context}`.  
-                            Si no existe la respuesta, di literal:  
-                            “Mira, no tengo la información precisa por el momento, pero reviso con los novios en un momento”
-                            solicitando al usuario formular la pregunta y sugiriendo **2 temas clave** adicionales sin realizar preguntas cerradas.
+                        🎯 **Single Source**  
+                        Only extract information from the **10 fragments** in `{context}`.  
+                        If the answer doesn't exist, say literally:  
+                        "I don't have the precise information at the moment, but I'll check with the couple right away"
+                        asking the user to phrase the question and suggesting **2 key topics** without asking closed questions.
 
-                            🧭 **Tono y estilo**  
-                            Cálido, empático y profesional, como una event planner con experiencia.  
-                            Frases cortas, claras y directas; nada de florituras.
+                        🧭 **Tone and Style**  
+                        Warm, empathetic, and professional, like an experienced event planner.  
+                        Short, clear, and direct phrases; no frills.
 
-                            🚫 **Cero alucinaciones**   No inventes ni supongas.  
-                            No muestres tu proceso de búsqueda: entrega solo la respuesta final.
+                        🚫 **No Hallucinations**  Don't make up or assume anything.  
+                        Don't show your search process: deliver only the final answer.
 
-                            📂 **Uso de contexto**  
-                            1. Antes de responder, selecciona solo los fragmentos **relevantes** de `{context}`.   
-                            2. Coordina datos coherentes (hora, lugar, acción).
+                        📂 **Context Usage**  
+                        1. Before responding, select only the **relevant** fragments from `{context}`.   
+                        2. Coordinate consistent data (time, place, action).
 
-                            🗺️ **Ubicaciones e imágenes**  
-                            Si preguntan por un lugar, incluye:  
-                            • Dirección completa  
-                            • Enlace de Google Maps  
+                        🗺️ **Locations and Images**  
+                        If they ask about a place, include:  
+                        • Complete address  
+                        • Google Maps link  
 
-                            🔄 **Cierre proactivo**  
-                            Al final, sugiere **2 temas clave** adicionales sobre la boda que el invitado 
-                            podría preguntar siempre dentro del limite de la longitud de cada mensaje.   
+                        🔄 **Proactive Closing**  
+                        At the end, suggest **2 key topics** about the wedding that the guest 
+                        might ask about, always within the message length limit.   
 
-                            🔄 **Respuestas cerradas como Si o NO por parte del usuario**  
-                            Si el usuario responde con un **SI** o **NO**, responde sugiriendo **4 temas clave**. 
+                        🔄 **User's Yes/No Responses**  
+                        If the user responds with **YES** or **NO**, respond by suggesting **4 key topics**. 
+                        """
 
-                            ✂️ **Límite de longitud**  
-                            Cada mensaje ≤ 1600 caracteres.  
-                            Si excedes, sintetiza automáticamente:  
-                            • Prioriza lugar, hora, acciones, enlaces.  
-                            • Usa viñetas si y solo si cabe más información y con emojis acorde al contexto.
-                            '''
-        
         chat_history = []
         chat_history.append({"role": "system", "content": system_prompt})
         chat_history.append({"role": "user", "content": query})         
 
-        # Generar respuesta con gpt-4.1
+        # Generate response with gpt-4.1
         gpt_response  = openai_client.chat.completions.create(
             model = "gpt-4.1",
             messages=chat_history,  # Enviar historial completo,
@@ -139,27 +132,27 @@ def chat(request: QueryRequest):
     
 @app.post("/webhook")
 def receive_msg_wp(From: str = Form(...), Body: str = Form(...)):
-    """ Endpoint para recibir mensajes desde WhatsApp vía Twilio """
-    print(f"Mensaje recibido de {From}: {Body}")
+    """ Endpoint to receive messages from WhatsApp via Twilio """
+    print(f"Message received from {From}: {Body}")
     
     respuesta_bot = call_api_bot(Body)
     respuesta_twilio = MessagingResponse()
     msg = respuesta_twilio.message(respuesta_bot)
 
-    # Nueva lógica para agregar imagen del jardín/recepción/terreno
-    keywords1 = ["jardín", "recepción", "terreno", "jardin", "recepcion", "fiesta", "peda", "evento"]
-    if any(palabra in Body.lower() for palabra in keywords1):
+    # New logic to add image of garden/reception/venue
+    keywords1 = ["garden", "reception", "venue", "garden", "reception", "party", "event"]
+    if any(word in Body.lower() for word in keywords1):
         msg.media("https://sa19920811dev.blob.core.windows.net/images/foto_terreno.png")
     
-    # Nueva lógica para agregar imagen de la ceremonia religiosa
-    keywords2 = ["misa", "ceremonia", "ceremonia reliogiosa", "parroquia", "parroquía", "iglesia"]
-    if any(palabra in Body.lower() for palabra in keywords2):
+    # New logic to add image of the religious ceremony
+    keywords2 = ["mass", "ceremony", "religious ceremony", "parish", "parish", "church"]
+    if any(word in Body.lower() for word in keywords2):
         msg.media("https://sa19920811dev.blob.core.windows.net/images/foto_iglesia.jpg")
 
     return Response(content=str(respuesta_twilio), media_type="application/xml")
 
 def call_api_bot(texto):
-    """ Llama a la API del chatbot en Azure App Service y devuelve la respuesta """
+    """ Calls the chatbot API in Azure App Service and returns the response """
     url = "https://weddingbotapp-escqeufmd8cbd3e8.eastus2-01.azurewebsites.net/chat"  
     payload = {"query": texto}
     headers = {"Content-Type": "application/json"}
@@ -167,8 +160,8 @@ def call_api_bot(texto):
     try:
         response = requests.post(url, json=payload, headers=headers)
         response_json = response.json()
-        return response_json.get("response", "Disculpe, no entendí su mensaje.")
+        return response_json.get("response", "I couldn't process your request at the moment.")
     except Exception as e:
-        return f"Error al comunicar con el bot: {str(e)}"
+        return f"Error calling the bot: {str(e)}"
     
 # uvicorn main:app --host 0.0.0.0 --port 8000 --reload

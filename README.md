@@ -1,121 +1,111 @@
-## Sofía – Asistente Conversacional para Bodas
+## Sofía – Wedding Conversational Assistant
 
-*Sofía* es un asistente conversacional para **WhatsApp**, creado específicamente para preguntas y respuestas para bodas.
+*Sofía* is a conversational assistant for **WhatsApp**, specifically designed for wedding-related questions and answers.
 
-- **Backend RAG en Azure**  
+- **RAG Backend on Azure**  
   - **GPT-4.1**  
-  - Búsqueda híbrida **BM25 + embeddings**  
-  - Responde con información verificada (agenda, vestimenta, traslados, menús).
+  - **BM25 + embeddings** hybrid search  
+  - Provides verified information (schedule, dress code, transportation, menus).
 
-- **Integración con Twilio**  
-  - Envía y recibe mensajes.  
-  - Transcribe audios con **ElevenLabs**.  
-  - Limita sus respuestas a ≈ **1600 caracteres** para mayor claridad y rapidez.
+- **Twilio Integration**  
+  - Sends and receives messages.  
+  - Transcribes audio with **ElevenLabs**.  
+  - Limits responses to ≈ **1600 characters** for clarity and speed.
 
-- **Memoria contextual**  
-  - Maneja ≈ **1 M tokens**, permitiendo seguimiento de conversaciones largas sin perder datos importantes de cada invitado.
+- **Contextual Memory**  
+  - Handles ≈ **1M tokens**, allowing for tracking of long conversations without losing important guest information.
 
-![Sofia](images/sofia.jpeg "Imagen de Sofia")
-
----
-
-![Conversacion1](images/1.jpeg "Conversacion1")
+![Sofia](images/sofia.jpeg "Sofia's Image")
 
 ---
 
-![Conversacion2](images/2.jpeg "Conversacion2")
+![Conversation1](images/1.jpeg "Conversation1")
 
 ---
 
-![Conversacion3](images/3.jpeg "Conversacion3")
+![Conversation2](images/2.jpeg "Conversation2")
 
 ---
 
-![Conversacion4](images/4.jpeg "Conversacion4")
+![Conversation3](images/3.jpeg "Conversation3")
 
 ---
 
-
-![Conversacion5](images/5.jpeg "Conversacion5")
-
----
-
-
-![Conversacion6](images/6.jpeg "Conversacion6")
+![Conversation4](images/4.jpeg "Conversation4")
 
 ---
 
-
-![Conversacion7](images/7.jpeg "Conversacion7")
-
----
-
-
-![Conversacion8](images/8.jpeg "Conversacion8")
+![Conversation5](images/5.jpeg "Conversation5")
 
 ---
 
-## 🚀 RAG Pipeline «Wedding Info» — Visión General
-
-Este script implementa un **flujo extremo-a-extremo** que transforma un PDF alojado en Azure Blob Storage en documentos indexados con vectores para un asistente conversacional (Sofía) sobre Azure AI Search + Azure OpenAI.
+![Conversation6](images/6.jpeg "Conversation6")
 
 ---
 
-## ➡️ **Arquitectura de alto nivel**
-
-**Pasos del flujo**
-
-![Diagrama RAG](images/rag_pipeline.png "Flujo completo del pipeline RAG")
-
-- 🟠 **Ingesta:** El PDF se almacena en **Blob Storage – Bronze**.
-
-- 📖**OCR:** prebuilt-read de **Azure Document Intelligence** extrae el texto.
-
-- 🪨 **Persistencia Silver:** El texto plano se guarda en **Blob Storage – Silver**.
-
-- 🗄️ **Normalización:** Se limpia y se preservan encabezados relevantes.
-
-- 🟡 **Segmentación:** El texto se estructura jerárquicamente y se escribe como JSON en **Blob Storage – Gold**.
-
-- 🧠 **Embeddings:** Cada título + subtítulo se convierte en vector con **Azure OpenAI** (text-embedding-ada-002) con 1536 tokens de tamaño.
-
-- 🗺️ **Indexación:** Documentos y vectores se cargan en **Azure AI Search** usando un perfil HNSW.
-
-- 🤖 **Consulta híbrida:** Sofía combina búsqueda por palabras **clave + vector** para responder con GPT-4o.
+![Conversation7](images/7.jpeg "Conversation7")
 
 ---
 
-## 🌐 **Lista de Endpoints Creados en la API FastAPI Desplegada en Azure**  
-
-Después de organizar y estructurar el código, la API ahora tiene **dos módulos principales**:
-- **Módulo `webhook`** → Para manejar la integración con Twilio WhatsApp API.
-- **Módulo `chat`** → Para manejar consultas con GPT-4.1 utilizando Azure OpenAI.
-
-Aquí están **todos los endpoints creados** y su respectiva funcionalidad. 🎯🔥  
+![Conversation8](images/8.jpeg "Conversation8")
 
 ---
 
-## 🌐 **Resumen de la API FastAPI en Azure**
-| **Método** | **Ruta** | **Descripción** |
+## RAG Pipeline «Wedding Info» — Overview
+
+This script implements an **end-to-end flow** that transforms a PDF hosted in Azure Blob Storage into indexed documents with vectors for a conversational assistant (Sofía) on Azure AI Search + Azure OpenAI.
+
+---
+
+## High-Level Architecture
+
+**Flow Steps**
+
+![RAG Diagram](images/rag_pipeline.png "Complete RAG Pipeline Flow")
+
+- Ingestion: The PDF is stored in **Blob Storage – Bronze**.
+
+- OCR: Prebuilt-read of **Azure Document Intelligence** extracts the text.
+
+- Persistence Silver: The plain text is saved in **Blob Storage – Silver**.
+
+- Normalization: The text is cleaned and relevant headers are preserved.
+
+- Segmentation: The text is structured hierarchically and written as JSON in **Blob Storage – Gold**.
+
+- Embeddings: Each title + subtitle is converted into a vector with **Azure OpenAI** (text-embedding-ada-002) with 1536 tokens in size.
+
+- Indexing: Documents and vectors are loaded into **Azure AI Search** using an HNSW profile.
+
+- Hybrid Query: Sofía combines keyword + vector search to respond with GPT-4.
+
+---
+
+## List of Endpoints Created in the FastAPI API Deployed in Azure
+
+After organizing and structuring the code, the API now has **two main modules**:
+- **Webhook module** → For handling Twilio WhatsApp API integration.
+- **Chat module** → For handling GPT-4.1 queries using Azure OpenAI.
+
+Here are **all the endpoints created** and their respective functionality.
+
+---
+
+## Summary of the FastAPI API in Azure
+| **Method** | **Route** | **Description** |
 |-----------|---------|----------------|
-| **GET** | `/` | 🏠 **Endpoint principal** que devuelve un mensaje de bienvenida. |
-| **POST** | `/chat` | 💬 **Realiza consultas a GPT-4.1** y recibe respuestas basadas en Retrieval-Augmented Generation (RAG). |
-| **POST** | `/webhook` | 📥 **Recibe mensajes entrantes de WhatsApp** y los procesa en FastAPI. |
+| **GET** | `/` | Home endpoint that returns a welcome message. |
+| **POST** | `/chat` | Performs queries to GPT-4.1 and receives responses based on Retrieval-Augmented Generation (RAG). |
+| **POST** | `/webhook` | Receives incoming WhatsApp messages and processes them in FastAPI. |
 
-## Mejoras en producción
+## Production Improvements
 
-- Se migro el modelo de un GPT-4o (128k tokens) a un GPT 4.1 (1M tokens).
-- Se implemento un workflow para enviar los cambios del pdf por correo para luego ser ingestados en Bronze.
+- The model was migrated from GPT-4o (128k tokens) to GPT 4.1 (1M tokens).
+- A workflow was implemented to send PDF changes by email for later ingestion into Bronze.
 
-## Proximas mejoras
+## Future Improvements
 
-- Incorppración de memoria para persistencia de mensajes por usuario.
-- Implementar un DAG para RAG pipeline para automatizar el workflow de datos.
-- Para mejorar la experiencia de usuario se puede crear un avatar digital en la app o voz en Real Time por twilio para llamadas continuas.
-- Evaluadores de Alucionacionaes.
-
-
-
-
- 
-
+- Incorporation of memory for message persistence by user.
+- Implement a DAG for the RAG pipeline to automate the data workflow.
+- To improve the user experience, a digital avatar can be created in the app or a real-time voice can be implemented using Twilio for continuous calls.
+- Allocation evaluators.
