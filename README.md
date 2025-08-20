@@ -7,15 +7,15 @@
   - **BM25 + embeddings** hybrid search  
   - Provides verified information (schedule, dress code, transportation, menus).
 
-- **Twilio Integration**  
-  - Sends and receives messages.  
-  - Transcribes audio with **ElevenLabs**.  
-  - Limits responses to ≈ **1600 characters** for clarity and speed.
+- **Integración con Twilio**  
+  - Envía y recibe mensajes.  
+  - Transcribe audios con **ElevenLabs**.  
+  - Limita sus respuestas a ≈ **1600 caracteres** para mayor claridad y rapidez.
 
 - **Contextual Memory**  
   - Handles ≈ **1M tokens**, allowing for tracking of long conversations without losing important guest information.
 
-![Sofia](images/sofia.jpeg "Sofia's Image")
+![Sofia](images/sofia.jpeg "Imagen de Sofia")
 
 ---
 
